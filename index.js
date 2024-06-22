@@ -5,13 +5,20 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+let AccessCount = 0;
 
 app.all('/*', function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Vary', 'Origin');
   next();
 })
+app.get('/metrics', async (req, res) => {
+  let metrics = `MC_UUID_GET_AccessCount ${AccessCount}`;
+  res.set('Content-Type', 'text/plain');
+  res.send(metrics);
+})
 app.get('/mojang/:mcid', async (req, res) => {
+  AccessCount++;
   const { mcid } = req.params;
   try {
     const response = await fetch(`https://api.mojang.com/users/profiles/minecraft/${mcid}`);
