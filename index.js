@@ -6,6 +6,11 @@ const PORT = 3000;
 
 app.use(express.json());
 
+app.all('/*', function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Vary', 'Origin');
+  next();
+})
 app.get('/mojang/:mcid', async (req, res) => {
   const { mcid } = req.params;
   try {
